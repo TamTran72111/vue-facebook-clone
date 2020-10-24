@@ -116,6 +116,7 @@ form {
   padding: 2rem;
   border: 2px solid black;
   border-radius: 10px;
+  background-color: #fff;
 }
 
 form .login {
