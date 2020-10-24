@@ -76,6 +76,9 @@ export default {
     };
 
     const login = async () => {
+      // Scroll to top to enhance experience on mobile
+      window.scrollTo(0, 0);
+
       if (password.value.length >= 6) {
         try {
           await store.dispatch("login", {
@@ -111,7 +114,8 @@ export default {
 
 <style scoped>
 form {
-  width: 400px;
+  max-width: 400px;
+  width: 100vw;
   margin: auto;
   padding: 2rem;
   border: 2px solid black;

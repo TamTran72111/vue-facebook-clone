@@ -12,7 +12,7 @@
 
         <hr class="mb-1" />
 
-        <div class="card-content">
+        <div class="card-content py-2">
           <div class="media">
             <div class="media-left">
               <UserAvatar
