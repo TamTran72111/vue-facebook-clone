@@ -9,7 +9,8 @@
             <i class="fas fa-times-circle"></i>
           </span>
         </div>
-        <hr />
+
+        <hr class="mb-1" />
 
         <div class="card-content">
           <div class="media">
