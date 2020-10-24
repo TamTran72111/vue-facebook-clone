@@ -49,8 +49,8 @@
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
-import { auth } from "../../firebase.js";
 import RequiredInput from "../ui/RequiredInput";
 import ErrorMessage from "../modals/ErrorMessage";
 import Signup from "./Signup";
@@ -62,9 +62,11 @@ export default {
     RequiredInput,
   },
   setup() {
+    const router = useRouter();
+    const store = useStore();
+
     const email = ref("");
     const password = ref("");
-    const router = useRouter();
 
     const error = ref("");
     const resetError = () => {
@@ -76,8 +78,11 @@ export default {
     const login = async () => {
       if (password.value.length >= 6) {
         try {
-          await auth.signInWithEmailAndPassword(email.value, password.value);
-          router.replace("/");
+          await store.dispatch("login", {
+            email: email.value,
+            password: password.value,
+          });
+          router.replace({ name: "home" });
         } catch (err) {
           error.value = err.message;
         }

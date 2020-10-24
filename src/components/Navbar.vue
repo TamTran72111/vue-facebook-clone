@@ -47,7 +47,7 @@
 
       <div class="navbar-end">
         <div class="navbar-item">
-          <div class="buttons">
+          <div class="buttons" @click="logout">
             <a class="button is-primary">
               <strong>Logout</strong>
             </a>
@@ -57,6 +57,20 @@
     </div>
   </nav>
 </template>
+
+<script>
+import { useStore } from "vuex";
+export default {
+  setup() {
+    const store = useStore();
+    const logout = () => {
+      store.dispatch("logout");
+    };
+
+    return { logout };
+  },
+};
+</script>
 
 <style scoped>
 img.logo {

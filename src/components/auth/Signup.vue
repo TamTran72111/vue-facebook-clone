@@ -75,8 +75,9 @@
 
 <script>
 import { ref } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
-import { auth, db, firestore } from "../../firebase";
 import RequiredInput from "../ui/RequiredInput";
 import ErrorMessage from "../modals/ErrorMessage";
 
@@ -87,6 +88,9 @@ export default {
     ErrorMessage,
   },
   setup() {
+    const router = useRouter();
+    const store = useStore();
+
     const email = ref("");
     const password = ref("");
     const firstname = ref("");
@@ -99,22 +103,13 @@ export default {
 
     const signup = async () => {
       try {
-        const authUser = await auth.createUserWithEmailAndPassword(
-          email.value,
-          password.value
-        );
-        authUser.user.updateProfile({
-          displayName: `${firstname.value} ${surname.value}`,
-        });
-        console.log("heello");
-        const new_user = {
+        await store.dispatch("signup", {
           email: email.value,
+          password: password.value,
           firstname: firstname.value,
           surname: surname.value,
-          userId: authUser.user.uid,
-          created_at: firestore.FieldValue.serverTimestamp(),
-        };
-        db.collection("users").add(new_user);
+        });
+        router.replace({ name: "home" });
       } catch (err) {
         error.value = err.message;
       }
