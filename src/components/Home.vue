@@ -1,3 +1,13 @@
 <template>
-  <div>hello this is home</div>
+  <Loading />
 </template>
+
+<script>
+import Loading from "./ui/Loading";
+
+export default {
+  components: {
+    Loading,
+  },
+};
+</script>
