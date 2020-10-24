@@ -1,13 +1,23 @@
 <template>
-  <Loading />
+  <div class="center-box">
+    <CreatePost />
+  </div>
 </template>
 
 <script>
-import Loading from "./ui/Loading";
+import CreatePost from "./posts/CreatePost";
 
 export default {
   components: {
-    Loading,
+    CreatePost,
   },
 };
 </script>
+
+
+<style scoped>
+.center-box {
+  max-width: 600px;
+  margin: auto;
+}
+</style>

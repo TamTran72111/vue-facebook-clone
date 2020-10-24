@@ -11,6 +11,9 @@ export default {
     user(state) {
       return state.user;
     },
+    displayName(state) {
+      return state.displayName;
+    },
   },
   mutations: {
     login(state, user) {
