@@ -59,12 +59,17 @@
 </template>
 
 <script>
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+
 export default {
   setup() {
     const store = useStore();
+    const router = useRouter();
+
     const logout = () => {
       store.dispatch("logout");
+      router.push({ name: "login" });
     };
 
     return { logout };

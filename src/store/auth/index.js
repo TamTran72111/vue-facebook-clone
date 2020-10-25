@@ -1,66 +1,83 @@
 import { auth, db, firestore } from "../../firebase";
 
+const defaultUserAvatar =
+  "https://firebasestorage.googleapis.com/v0/b/vue-projects-89c61.appspot.com/o/avatars%2Fdefault-user-avater.png?alt=media&token=55e5edb1-e550-4161-8ee0-3e72d2d2a20f";
+
 export default {
   state() {
     return {
       user: null,
-      displayName: null,
     };
   },
   getters: {
-    user(state) {
-      return state.user;
-    },
     displayName(state) {
-      return state.displayName;
+      return state.user.displayName;
+    },
+    userAvatar(state) {
+      return state.user.avatar;
+    },
+    isLoggedIn(state) {
+      return state.user !== null;
+    },
+    userId(state) {
+      return state.user.id;
     },
   },
   mutations: {
     login(state, user) {
       state.user = user;
-      state.displayName = user.displayName;
     },
     logout(state) {
       state.user = null;
-      state.displayName = null;
     },
   },
   actions: {
-    tryLogin({ commit }) {
+    async tryLogin({ dispatch }) {
       setTimeout(() => {
         if (auth.currentUser) {
-          commit("login", auth.currentUser);
+          dispatch("loginWithUid", auth.currentUser.uid);
         }
       }, 400);
     },
-    async login({ commit }, payload) {
+    async login({ dispatch }, payload) {
       const authUser = await auth.signInWithEmailAndPassword(
         payload.email,
         payload.password
       );
-      commit("login", authUser.user);
+      await dispatch("loginWithUid", authUser.user.uid);
     },
-
-    async signup({ commit }, payload) {
+    async signup({ dispatch }, payload) {
       const authUser = await auth.createUserWithEmailAndPassword(
         payload.email,
         payload.password
       );
-      commit("login", authUser.user);
 
-      await authUser.user.updateProfile({
-        displayName: `${payload.firstname} ${payload.surname}`,
+      const displayName = `${payload.firstname} ${payload.surname}`;
+
+      await db
+        .collection("users")
+        .doc(authUser.user.uid)
+        .set({
+          email: payload.email,
+          firstname: payload.firstname,
+          surname: payload.surname,
+          displayName,
+          avatar: defaultUserAvatar,
+          created_at: firestore.FieldValue.serverTimestamp(),
+        });
+
+      await dispatch("loginWithUid", authUser.user.uid);
+    },
+    async loginWithUid({ commit }, uid) {
+      const new_user = await db
+        .collection("users")
+        .doc(uid)
+        .get();
+
+      commit("login", {
+        id: uid,
+        ...new_user.data(),
       });
-
-      const new_user = {
-        email: payload.email,
-        firstname: payload.firstname,
-        surname: payload.surname,
-        userId: authUser.user.uid,
-        created_at: firestore.FieldValue.serverTimestamp(),
-      };
-
-      await db.collection("users").add(new_user);
     },
     logout({ commit }) {
       auth.signOut();

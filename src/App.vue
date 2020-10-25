@@ -21,9 +21,7 @@ export default {
     const store = useStore();
     store.dispatch("tryLogin");
 
-    const isLoggedIn = computed(() => {
-      return store.getters.user !== null;
-    });
+    const isLoggedIn = computed(() => store.getters.isLoggedIn);
 
     return { isLoggedIn };
   },

@@ -26,7 +26,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (store.getters.user || to.name === "login") {
+  if (store.getters.isLoggedIn || to.name === "login") {
     next();
   } else {
     next({ name: "login" });

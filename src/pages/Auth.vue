@@ -22,9 +22,7 @@ export default {
 
     const loaded = ref(false);
 
-    const isLoggedIn = computed(() => {
-      return store.getters.user !== null;
-    });
+    const isLoggedIn = computed(() => store.getters.isLoggedIn);
 
     watch(isLoggedIn, () => {
       if (isLoggedIn.value) {

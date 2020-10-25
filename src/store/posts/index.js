@@ -19,9 +19,10 @@ export default {
   actions: {
     async createPost({ commit, rootGetters }, post) {
       const newPost = await db.collection("posts").add({
-        userId: rootGetters.user.uid,
+        userId: rootGetters.userId,
         displayName: rootGetters.displayName,
         post,
+        userAvatar: rootGetters.userAvatar,
         created_at: firestore.FieldValue.serverTimestamp(),
       });
 

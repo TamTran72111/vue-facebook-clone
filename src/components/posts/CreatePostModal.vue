@@ -15,10 +15,7 @@
         <div class="card-content py-2">
           <div class="media">
             <div class="media-left">
-              <UserAvatar
-                src="https://bulma.io/images/placeholders/96x96.png"
-                userId="abc"
-              />
+              <UserAvatar :src="userAvatar" userId="abc" />
             </div>
             <div class="media-content is-align-self-center">
               <p class="title is-5">{{ displayName }}</p>
@@ -68,17 +65,17 @@ export default {
   components: { UserAvatar },
   setup(props, { emit }) {
     const store = useStore();
-    const displayName = computed(() => store.getters.displayName);
 
-    const disabled = computed(() => {
-      return props.modelValue === "";
-    });
+    const displayName = computed(() => store.getters.displayName);
+    const userAvatar = computed(() => store.getters.userAvatar);
+
+    const disabled = computed(() => props.modelValue === "");
 
     const handleInput = (e) => {
       emit("update:modelValue", e.target.value);
     };
 
-    return { handleInput, disabled, displayName };
+    return { handleInput, disabled, displayName, userAvatar };
   },
 };
 </script>

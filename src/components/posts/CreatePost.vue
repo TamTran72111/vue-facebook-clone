@@ -2,10 +2,7 @@
   <div class="box">
     <div class="createPost">
       <div class="createPost__avatar">
-        <UserAvatar
-          src="https://bulma.io/images/placeholders/96x96.png"
-          userId="abc"
-        />
+        <UserAvatar :src="userAvatar" userId="abc" />
       </div>
 
       <input
@@ -51,13 +48,16 @@ export default {
       return `What's on your mind, ${store.getters.displayName}?`;
     });
 
+    const userAvatar = computed(() => store.getters.userAvatar);
+
     const createNewPost = async () => {
       try {
         await store.dispatch("createPost", newPost.value);
         newPost.value = "";
         showNewPost.value = false;
-      } catch {
+      } catch (err) {
         //Handle Error
+        console.log(err);
       }
     };
 
@@ -67,6 +67,7 @@ export default {
       toggleNewPost,
       createNewPost,
       placeholder,
+      userAvatar,
     };
   },
 };
