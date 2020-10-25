@@ -2,7 +2,7 @@
   <div class="box">
     <div class="createPost">
       <div class="createPost__avatar">
-        <UserAvatar :src="userAvatar" userId="abc" />
+        <UserAvatar :src="userAvatar" :userId="userId" />
       </div>
 
       <input
@@ -49,6 +49,7 @@ export default {
     });
 
     const userAvatar = computed(() => store.getters.userAvatar);
+    const userId = computed(() => store.getters.userId);
 
     const createNewPost = async () => {
       try {
@@ -68,6 +69,7 @@ export default {
       createNewPost,
       placeholder,
       userAvatar,
+      userId,
     };
   },
 };

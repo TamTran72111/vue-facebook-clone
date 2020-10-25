@@ -15,7 +15,7 @@
         <div class="card-content py-2">
           <div class="media">
             <div class="media-left">
-              <UserAvatar :src="userAvatar" userId="abc" />
+              <UserAvatar :src="userAvatar" :userId="userId" />
             </div>
             <div class="media-content is-align-self-center">
               <p class="title is-5">{{ displayName }}</p>
@@ -68,6 +68,7 @@ export default {
 
     const displayName = computed(() => store.getters.displayName);
     const userAvatar = computed(() => store.getters.userAvatar);
+    const userId = computed(() => store.getters.userId);
 
     const disabled = computed(() => props.modelValue === "");
 
@@ -75,7 +76,7 @@ export default {
       emit("update:modelValue", e.target.value);
     };
 
-    return { handleInput, disabled, displayName, userAvatar };
+    return { handleInput, disabled, displayName, userAvatar, userId };
   },
 };
 </script>
