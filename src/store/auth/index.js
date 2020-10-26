@@ -68,7 +68,7 @@ export default {
 
       await dispatch("loginWithUid", authUser.user.uid);
     },
-    async loginWithUid({ commit }, uid) {
+    async loginWithUid({ commit, dispatch }, uid) {
       const new_user = await db
         .collection("users")
         .doc(uid)
@@ -78,6 +78,7 @@ export default {
         id: uid,
         ...new_user.data(),
       });
+      dispatch("fetchLikes");
     },
     logout({ commit }) {
       auth.signOut();

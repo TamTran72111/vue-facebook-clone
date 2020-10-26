@@ -17,9 +17,10 @@
       <hr />
       <div class="iteractions">
         <div>
-          <span class="icon has-text-danger">
-            <i class="far fa-heart"></i>
+          <span @click="toggleLiked" class="icon has-text-danger">
+            <i :class="liked ? 'fas' : 'far'" class="fa-heart"></i>
           </span>
+
           <span>{{ post.likes }} Likes</span>
         </div>
         <div>
@@ -35,6 +36,8 @@
 
 <script>
 import { computed } from "vue";
+import { useStore } from "vuex";
+
 import UserAvatar from "../ui/UserAvatar";
 
 export default {
@@ -46,7 +49,20 @@ export default {
       return `${created_at.toLocaleTimeString()} ${created_at.toLocaleDateString()}`;
     });
 
-    return { date };
+    const store = useStore();
+    const liked = computed(() => {
+      return store.getters.likes.some((like) => like.postId === props.post.id);
+    });
+
+    const toggleLiked = async () => {
+      if (liked.value) {
+        store.dispatch("unlike", props.post.id);
+      } else {
+        store.dispatch("like", props.post.id);
+      }
+    };
+
+    return { date, liked, toggleLiked };
   },
 };
 </script>

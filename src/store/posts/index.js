@@ -54,5 +54,19 @@ export default {
     clearPosts({ commit }) {
       commit("clearPosts");
     },
+
+    async updatePostLike({ getters }, payload) {
+      const likedPostIndex = getters.posts.findIndex(
+        (post) => post.id === payload.postId
+      );
+
+      const likedPost = getters.posts[likedPostIndex];
+
+      likedPost.likes += payload.likeChange;
+      await db
+        .collection("posts")
+        .doc(likedPost.id)
+        .update({ likes: likedPost.likes });
+    },
   },
 };
