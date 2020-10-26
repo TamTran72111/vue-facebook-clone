@@ -30,6 +30,8 @@ export default {
         post,
         userAvatar: rootGetters.userAvatar,
         created_at: firestore.FieldValue.serverTimestamp(),
+        likes: 0,
+        comments: 0,
       });
 
       const newPostData = await newPost.get();

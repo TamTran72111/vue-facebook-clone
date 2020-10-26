@@ -14,6 +14,21 @@
       <div class="content">
         {{ post.post }}
       </div>
+      <hr />
+      <div class="iteractions">
+        <div>
+          <span class="icon has-text-danger">
+            <i class="far fa-heart"></i>
+          </span>
+          <span>{{ post.likes }} Likes</span>
+        </div>
+        <div>
+          <span class="icon has-text-info">
+            <i class="fas fa-comment"></i>
+          </span>
+          <span>{{ post.comments }} Comments</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -35,3 +50,21 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.iteractions {
+  display: flex;
+  text-align: center;
+}
+.iteractions div {
+  flex-grow: 1;
+}
+.iteractions span.icon {
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+hr {
+  margin-bottom: 5px;
+}
+</style>
