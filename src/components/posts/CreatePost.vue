@@ -13,12 +13,21 @@
         :value="newPost"
       />
     </div>
-    <CreatePostModal
+    <!-- <CreatePostModal
       :show="showNewPost"
       v-model="newPost"
       :close="toggleNewPost"
       :placeholder="placeholder"
       :createNewPost="createNewPost"
+    /> -->
+    <PostModal
+      title="Create Post"
+      buttonText="Post"
+      :show="showNewPost"
+      v-model="newPost"
+      :close="toggleNewPost"
+      :placeholder="placeholder"
+      :buttonClick="createNewPost"
     />
   </div>
 </template>
@@ -27,12 +36,12 @@
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
-import CreatePostModal from "./CreatePostModal";
+import PostModal from "./PostModal";
 import UserAvatar from "../ui/UserAvatar";
 
 export default {
   components: {
-    CreatePostModal,
+    PostModal,
     UserAvatar,
   },
   setup() {

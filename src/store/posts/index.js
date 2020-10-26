@@ -21,6 +21,13 @@ export default {
     clearPosts(state) {
       state.posts = [];
     },
+    editPost(state, { postId, post }) {
+      const postIndex = state.posts.findIndex((post) => post.id === postId);
+      state.posts[postIndex].post = post;
+    },
+    deletePost(state, postId) {
+      state.posts = state.posts.filter((post) => post.id !== postId);
+    },
   },
   actions: {
     async createPost({ commit, rootGetters }, post) {
@@ -67,6 +74,22 @@ export default {
         .collection("posts")
         .doc(likedPost.id)
         .update({ likes: likedPost.likes });
+    },
+
+    async editPost({ commit }, { postId, post }) {
+      await db
+        .collection("posts")
+        .doc(postId)
+        .update({ post });
+      commit("editPost", { postId, post });
+    },
+
+    async deletePost({ commit }, postId) {
+      await db
+        .collection("posts")
+        .doc(postId)
+        .delete();
+      commit("deletePost", postId);
     },
   },
 };

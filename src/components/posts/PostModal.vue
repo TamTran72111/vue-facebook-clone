@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="box">
         <div class="control has-icons-right">
-          <h4 class="title is-4 has-text-centered">Create Post</h4>
+          <h4 class="title is-4 has-text-centered">{{ title }}</h4>
           <span class="icon is-small is-right" @click="close">
             <i class="fas fa-times-circle"></i>
           </span>
@@ -40,9 +40,9 @@
                 <button
                   :disabled="disabled"
                   class="button is-info is-fullwidth has-text-weight-semibold"
-                  @click="createNewPost"
+                  @click="buttonClick"
                 >
-                  Post
+                  {{ buttonText }}
                 </button>
               </div>
             </div>
@@ -60,7 +60,15 @@ import { useStore } from "vuex";
 import UserAvatar from "../ui/UserAvatar";
 
 export default {
-  props: ["show", "modelValue", "close", "createNewPost", "placeholder"],
+  props: [
+    "title",
+    "show",
+    "modelValue",
+    "close",
+    "buttonClick",
+    "placeholder",
+    "buttonText",
+  ],
   emits: ["update:modelValue"],
   components: { UserAvatar },
   setup(props, { emit }) {
