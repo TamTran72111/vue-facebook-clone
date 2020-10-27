@@ -13,13 +13,6 @@
         :value="newPost"
       />
     </div>
-    <!-- <CreatePostModal
-      :show="showNewPost"
-      v-model="newPost"
-      :close="toggleNewPost"
-      :placeholder="placeholder"
-      :createNewPost="createNewPost"
-    /> -->
     <PostModal
       title="Create Post"
       buttonText="Post"

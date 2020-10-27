@@ -28,6 +28,22 @@ export default {
     deletePost(state, postId) {
       state.posts = state.posts.filter((post) => post.id !== postId);
     },
+    addComment(state, comment) {
+      const postIndex = state.posts.findIndex(
+        (post) => post.id === comment.postId
+      );
+      if (postIndex != -1) {
+        state.posts[postIndex].commentList.push(comment);
+      }
+    },
+    fetchComments(state, payload) {
+      const postIndex = state.posts.findIndex(
+        (post) => post.id === payload.postId
+      );
+      if (postIndex != -1) {
+        state.posts[postIndex].commentList = payload.comments;
+      }
+    },
   },
   actions: {
     async createPost({ commit, rootGetters }, post) {
@@ -54,9 +70,26 @@ export default {
         id: post.id,
         ...post.data(),
       }));
+
       if (posts.length > 0) {
         commit("addPosts", posts);
       }
+
+      // Fetch comments
+      posts.forEach(async (post) => {
+        const comments = await db
+          .collection("comments")
+          .where("postId", "==", post.id)
+          .orderBy("created_at", "asc")
+          .get();
+        commit("fetchComments", {
+          postId: post.id,
+          comments: comments.docs.map((comment) => ({
+            id: comment.id,
+            ...comment.data(),
+          })),
+        });
+      });
     },
     clearPosts({ commit }) {
       commit("clearPosts");
@@ -90,6 +123,33 @@ export default {
         .doc(postId)
         .delete();
       commit("deletePost", postId);
+    },
+
+    async createComment({ commit, getters, rootGetters }, { postId, comment }) {
+      const newComment_doc = await db.collection("comments").add({
+        postId,
+        comment,
+        userId: rootGetters.userId,
+        userAvatar: rootGetters.userAvatar,
+        created_at: firestore.FieldValue.serverTimestamp(),
+      });
+
+      const postIndex = getters.posts.findIndex((post) => post.id === postId);
+
+      getters.posts[postIndex].comments++;
+
+      await db
+        .collection("posts")
+        .doc(postId)
+        .update({
+          comments: getters.posts[postIndex].comments,
+        });
+
+      const newComment = await newComment_doc.get();
+      commit("addComment", {
+        id: newComment.id,
+        ...newComment.data(),
+      });
     },
   },
 };

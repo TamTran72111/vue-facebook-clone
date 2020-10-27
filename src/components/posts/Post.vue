@@ -62,6 +62,8 @@
           <span>{{ post.comments }} Comments</span>
         </div>
       </div>
+
+      <CreateComment :postId="post.id" />
     </div>
 
     <!-- Edit Post -->
@@ -94,12 +96,13 @@ import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 import PostModal from "./PostModal";
+import CreateComment from "../comments/CreateComment";
 import UserAvatar from "../ui/UserAvatar";
 import ConfirmationModal from "../ui/ConfirmationModal";
 
 export default {
   props: ["post"],
-  components: { UserAvatar, PostModal, ConfirmationModal },
+  components: { UserAvatar, PostModal, ConfirmationModal, CreateComment },
   setup(props) {
     const date = computed(() => {
       const created_at = new Date(props.post.created_at.seconds * 1000);
