@@ -44,6 +44,25 @@ export default {
         state.posts[postIndex].commentList = payload.comments;
       }
     },
+    deleteComment(state, { commentId, postId }) {
+      const postIndex = state.posts.findIndex((post) => post.id === postId);
+      if (postIndex != -1) {
+        state.posts[postIndex].commentList = state.posts[
+          postIndex
+        ].commentList.filter((comment) => comment.id !== commentId);
+      }
+    },
+    editComment(state, { postId, commentId, comment }) {
+      const postIndex = state.posts.findIndex((post) => post.id === postId);
+      if (postIndex != -1) {
+        const commentIndex = state.posts[postIndex].commentList.findIndex(
+          (comment) => comment.id == commentId
+        );
+        if (commentIndex != -1) {
+          state.posts[postIndex].commentList[commentIndex].comment = comment;
+        }
+      }
+    },
   },
   actions: {
     async createPost({ commit, rootGetters }, post) {
@@ -151,6 +170,24 @@ export default {
         id: newComment.id,
         ...newComment.data(),
       });
+    },
+
+    async deleteComment({ commit }, { commentId, postId }) {
+      await db
+        .collection("comments")
+        .doc(commentId)
+        .delete();
+      commit("deleteComment", { commentId, postId });
+    },
+
+    async editComment({ commit }, { postId, commentId, comment }) {
+      await db
+        .collection("comments")
+        .doc(commentId)
+        .update({
+          comment,
+        });
+      commit("editComment", { postId, commentId, comment });
     },
   },
 };
