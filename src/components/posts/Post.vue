@@ -56,13 +56,13 @@
           <span>{{ post.likes }} Likes</span>
         </div>
         <div>
-          <span class="icon has-text-info">
-            <i class="fas fa-comment"></i>
+          <span @click="toggleShowComments" class="icon has-text-info">
+            <i :class="commented ? 'fas' : 'far'" class="fa-comment"></i>
           </span>
           <span>{{ post.comments }} Comments</span>
         </div>
       </div>
-
+      <CommentList :commentList="post.commentList" :show="showComments" />
       <CreateComment :postId="post.id" />
     </div>
 
@@ -97,12 +97,19 @@ import { useStore } from "vuex";
 
 import PostModal from "./PostModal";
 import CreateComment from "../comments/CreateComment";
+import CommentList from "../comments/CommentList";
 import UserAvatar from "../ui/UserAvatar";
 import ConfirmationModal from "../ui/ConfirmationModal";
 
 export default {
   props: ["post"],
-  components: { UserAvatar, PostModal, ConfirmationModal, CreateComment },
+  components: {
+    UserAvatar,
+    PostModal,
+    ConfirmationModal,
+    CreateComment,
+    CommentList,
+  },
   setup(props) {
     const date = computed(() => {
       const created_at = new Date(props.post.created_at.seconds * 1000);
@@ -161,6 +168,19 @@ export default {
       store.dispatch("deletePost", props.post.id);
     };
 
+    const commented = computed(
+      () =>
+        props.post.commentList &&
+        props.post.commentList.some(
+          (comment) => comment.userId === store.getters.userId
+        )
+    );
+
+    const showComments = ref(false);
+    const toggleShowComments = () => {
+      showComments.value = !showComments.value;
+    };
+
     return {
       date,
       liked,
@@ -176,6 +196,9 @@ export default {
       showDelete,
       toggleDelete,
       confirmDelete,
+      commented,
+      showComments,
+      toggleShowComments,
     };
   },
 };

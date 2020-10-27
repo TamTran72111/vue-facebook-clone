@@ -130,6 +130,7 @@ export default {
         postId,
         comment,
         userId: rootGetters.userId,
+        displayName: rootGetters.displayName,
         userAvatar: rootGetters.userAvatar,
         created_at: firestore.FieldValue.serverTimestamp(),
       });
