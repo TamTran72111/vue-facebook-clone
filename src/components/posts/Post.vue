@@ -116,8 +116,11 @@ export default {
   },
   setup(props) {
     const date = computed(() => {
-      const created_at = new Date(props.post.created_at.seconds * 1000);
-      return `${created_at.toLocaleTimeString()} ${created_at.toLocaleDateString()}`;
+      if (props.post && props.post.created_at) {
+        const created_at = new Date(props.post.created_at.seconds * 1000);
+        return `${created_at.toLocaleTimeString()} ${created_at.toLocaleDateString()}`;
+      }
+      return "";
     });
 
     const store = useStore();

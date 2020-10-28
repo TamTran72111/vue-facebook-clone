@@ -4,24 +4,27 @@ const Posts = db.collection("posts");
 
 export default {
   async fetchPosts({ commit, dispatch }) {
-    const post_docs = await Posts.orderBy("created_at", "desc").get();
+    const unsubscribe = await Posts.orderBy("created_at", "desc").onSnapshot(
+      (snapshot) => {
+        // Update posts on snapshot change
+        const posts = snapshot.docs.map((post) => ({
+          id: post.id,
+          ...post.data(),
+        }));
+        commit("fetchPosts", posts);
 
-    const posts = post_docs.docs.map((post) => ({
-      id: post.id,
-      ...post.data(),
-    }));
-
-    if (posts.length > 0) {
-      commit("addPosts", posts);
-    }
-
-    dispatch(
-      "fetchComments",
-      posts.map((post) => post.id)
+        // Update comments for changed posts (added and modified only)
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "modified" || change.type === "added") {
+            dispatch("fetchPostComments", change.doc.id);
+          }
+        });
+      }
     );
+    commit("addPostListener", unsubscribe);
   },
-  async createPost({ commit, rootGetters }, post) {
-    const newPost = await Posts.add({
+  createPost({ rootGetters }, post) {
+    Posts.add({
       userId: rootGetters.userId,
       displayName: rootGetters.displayName,
       post,
@@ -30,9 +33,6 @@ export default {
       likes: 0,
       comments: 0,
     });
-
-    const newPostData = await newPost.get();
-    commit("addPost", { id: newPostData.id, ...newPostData.data() });
   },
   clearPosts({ commit }) {
     commit("clearPosts");

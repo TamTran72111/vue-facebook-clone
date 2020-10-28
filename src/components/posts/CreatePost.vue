@@ -53,15 +53,10 @@ export default {
     const userAvatar = computed(() => store.getters.userAvatar);
     const userId = computed(() => store.getters.userId);
 
-    const createNewPost = async () => {
-      try {
-        await store.dispatch("createPost", newPost.value);
-        newPost.value = "";
-        showNewPost.value = false;
-      } catch (err) {
-        //Handle Error
-        console.log(err);
-      }
+    const createNewPost = () => {
+      store.dispatch("createPost", newPost.value);
+      showNewPost.value = false;
+      newPost.value = "";
     };
 
     return {
