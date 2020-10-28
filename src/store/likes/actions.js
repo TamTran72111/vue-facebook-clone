@@ -1,11 +1,14 @@
 import { db, firestore } from "../../firebase";
 
+const Likes = db.collection("likes");
+
 export default {
   async fetchLikes({ commit, rootGetters }) {
-    const like_docs = await db
-      .collection("likes")
-      .where("userId", "==", rootGetters.userId)
-      .get();
+    const like_docs = await Likes.where(
+      "userId",
+      "==",
+      rootGetters.userId
+    ).get();
 
     const likes = like_docs.docs.map((like) => ({
       id: like.id,
@@ -19,9 +22,10 @@ export default {
       userId: rootGetters.userId,
       postId: postId,
     };
-    const like = await db
-      .collection("likes")
-      .add({ ...new_like, created_at: firestore.FieldValue.serverTimestamp() });
+    const like = await Likes.add({
+      ...new_like,
+      created_at: firestore.FieldValue.serverTimestamp(),
+    });
 
     // Increase the like count of the corresponding post.
     await dispatch("updatePostLike", {
@@ -40,10 +44,8 @@ export default {
     // Cannot unlike if not found the like
     if (liked.length > 0) {
       const likeId = liked[0].id;
-      await db
-        .collection("likes")
-        .doc(likeId)
-        .delete();
+
+      await Likes.doc(likeId).delete();
 
       // Decrease the like count of the corresponding post.
       await dispatch("updatePostLike", {
@@ -53,5 +55,13 @@ export default {
 
       commit("unlike", likeId);
     }
+  },
+  async deletePostLikes(_, postId) {
+    // Delete all likes related a post when the post is deleted.
+    const likes = await Likes.where("postId", "==", postId).get();
+    likes.docs.forEach((like) => like.ref.delete());
+
+    // Deleted likes still exist in the store's state, but it
+    // does not cause any problem, so just leave it there.
   },
 };

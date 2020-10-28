@@ -1,10 +1,10 @@
 import { db, firestore } from "../../firebase";
 
+const Comments = db.collection("comments");
+
 export default {
   async fetchPostComments({ commit }, postId) {
-    const comments = await db
-      .collection("comments")
-      .where("postId", "==", postId)
+    const comments = await Comments.where("postId", "==", postId)
       .orderBy("created_at", "asc")
       .get();
 
@@ -29,7 +29,7 @@ export default {
       displayName: rootGetters.displayName,
       userAvatar: rootGetters.userAvatar,
     };
-    const newCommentDoc = await db.collection("comments").add({
+    const newCommentDoc = await Comments.add({
       ...newComment,
       created_at: firestore.FieldValue.serverTimestamp(),
     });
@@ -43,23 +43,25 @@ export default {
     });
   },
   async editComment({ commit }, { postId, commentId, comment }) {
-    await db
-      .collection("comments")
-      .doc(commentId)
-      .update({
-        comment,
-      });
+    await Comments.doc(commentId).update({
+      comment,
+    });
     commit("editComment", { postId, commentId, comment });
   },
   async deleteComment({ commit, dispatch }, { commentId, postId }) {
     commit("deleteComment", { commentId, postId });
 
-    await db
-      .collection("comments")
-      .doc(commentId)
-      .delete();
+    await Comments.doc(commentId).delete();
 
     // Decrease the comment count of the corresponding post
     await dispatch("updatePostComment", { postId, commentChange: -1 });
+  },
+  async deletePostComments(_, postId) {
+    // Delete all comments related a post when the post is deleted.
+    const comments = await Comments.where("postId", "==", postId).get();
+    comments.docs.forEach((comment) => comment.ref.delete());
+
+    // Deleted comments still exist in the store's state, but it
+    // does not cause any problem, so just leave it there.
   },
 };
