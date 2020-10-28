@@ -62,8 +62,12 @@
           <span>{{ post.comments }} Comments</span>
         </div>
       </div>
-      <CommentList :postId="post.id" :show="showComments" />
-      <CreateComment :postId="post.id" />
+      <CommentList
+        :postId="post.id"
+        :show="showComments"
+        :toggle="toggleShowComments"
+      />
+      <CreateComment :postId="post.id" @comment-created="showComments = true" />
     </div>
 
     <!-- Edit Post -->

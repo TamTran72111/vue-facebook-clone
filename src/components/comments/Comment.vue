@@ -45,6 +45,7 @@
       </div>
       <form v-if="showEdit" @submit.prevent="editComment">
         <input
+          ref="commentInput"
           type="text"
           class="input is-rounded"
           v-model="editedComment"
@@ -69,7 +70,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 
 import ConfirmationModal from "../ui/ConfirmationModal";
@@ -118,6 +119,15 @@ export default {
       });
     };
 
+    const commentInput = ref(null);
+    watch(showEdit, () => {
+      if (showEdit.value) {
+        setTimeout(() => {
+          commentInput.value.focus();
+        }, 200);
+      }
+    });
+
     return {
       isAuthor,
       showDropdown,
@@ -129,6 +139,7 @@ export default {
       showDelete,
       toggleDelete,
       confirmDelete,
+      commentInput,
     };
   },
 };

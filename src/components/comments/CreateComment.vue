@@ -25,7 +25,8 @@ export default {
   components: {
     UserAvatar,
   },
-  setup(props) {
+  emits: ["commentCreated"],
+  setup(props, { emit }) {
     const comment = ref("");
 
     const store = useStore();
@@ -38,6 +39,7 @@ export default {
         comment: comment.value,
       });
       comment.value = "";
+      emit("comment-created");
     };
 
     return {

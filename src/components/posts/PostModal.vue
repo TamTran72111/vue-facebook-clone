@@ -26,6 +26,7 @@
             <div class="field">
               <div class="control">
                 <textarea
+                  ref="textarea"
                   rows="5"
                   class="textarea"
                   :placeholder="placeholder"
@@ -54,7 +55,7 @@
 </template>
 
 <script>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 
 import UserAvatar from "../ui/UserAvatar";
@@ -84,7 +85,16 @@ export default {
       emit("update:modelValue", e.target.value);
     };
 
-    return { handleInput, disabled, displayName, userAvatar, userId };
+    const textarea = ref(null);
+    watch(props, () => {
+      if (props.show) {
+        setTimeout(() => {
+          textarea.value.focus();
+        }, 200);
+      }
+    });
+
+    return { handleInput, disabled, displayName, userAvatar, userId, textarea };
   },
 };
 </script>
