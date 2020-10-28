@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 
 import PostModal from "./PostModal";
@@ -121,13 +121,27 @@ export default {
       return store.getters.likes.some((like) => like.postId === props.post.id);
     });
 
-    const toggleLiked = async () => {
-      console.log("what??");
-      if (liked.value) {
-        store.dispatch("unlike", props.post.id);
-      } else {
-        store.dispatch("like", props.post.id);
+    // Avoid users spam the like button by using bouncing and wait 200ms before
+    // dispatching like/unlike actions.
+    const bouncingLike = ref(liked.value);
+    let likeTimer = null;
+    watch(bouncingLike, () => {
+      if (likeTimer != null) {
+        clearTimeout(likeTimer);
       }
+      if (bouncingLike.value === liked.value) {
+        return;
+      }
+      likeTimer = setTimeout(() => {
+        if (liked.value) {
+          store.dispatch("unlike", props.post.id);
+        } else {
+          store.dispatch("like", props.post.id);
+        }
+      }, 200);
+    });
+    const toggleLiked = async () => {
+      bouncingLike.value = !bouncingLike.value;
     };
 
     const isAuthor = computed(() => props.post.userId === store.getters.userId);
@@ -168,11 +182,13 @@ export default {
       store.dispatch("deletePost", props.post.id);
     };
 
-    const commented = computed(() =>
-      store.getters
-        .getComments(props.post.id)
-        .some((comment) => comment.userId === store.getters.userId)
-    );
+    const commented = computed(() => {
+      const comments = store.getters.getComments(props.post.id);
+
+      return comments?.some(
+        (comment) => comment.userId === store.getters.userId
+      );
+    });
 
     const showComments = ref(false);
     const toggleShowComments = () => {

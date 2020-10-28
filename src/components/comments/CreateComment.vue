@@ -37,7 +37,6 @@ export default {
         postId: props.postId,
         comment: comment.value,
       });
-      console.log("Added!");
       comment.value = "";
     };
 
