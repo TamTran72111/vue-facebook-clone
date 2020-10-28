@@ -62,7 +62,7 @@
           <span>{{ post.comments }} Comments</span>
         </div>
       </div>
-      <CommentList :commentList="post.commentList" :show="showComments" />
+      <CommentList :postId="post.id" :show="showComments" />
       <CreateComment :postId="post.id" />
     </div>
 
@@ -168,12 +168,10 @@ export default {
       store.dispatch("deletePost", props.post.id);
     };
 
-    const commented = computed(
-      () =>
-        props.post.commentList &&
-        props.post.commentList.some(
-          (comment) => comment.userId === store.getters.userId
-        )
+    const commented = computed(() =>
+      store.getters
+        .getComments(props.post.id)
+        .some((comment) => comment.userId === store.getters.userId)
     );
 
     const showComments = ref(false);

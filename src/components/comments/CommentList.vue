@@ -1,20 +1,25 @@
 <template>
   <transition-group tag="div" name="slide" v-if="show">
-    <Comment
-      v-for="comment in commentList"
-      :key="comment.id"
-      :comment="comment"
-    />
+    <Comment v-for="comment in comments" :key="comment.id" :comment="comment" />
   </transition-group>
 </template>
 
 
 <script>
+import { computed } from "vue";
+import { useStore } from "vuex";
+
 import Comment from "./Comment";
 
 export default {
-  props: ["commentList", "show"],
+  props: ["postId", "show"],
   components: { Comment },
+  setup(props) {
+    const store = useStore();
+    const comments = computed(() => store.getters.getComments(props.postId));
+
+    return { comments };
+  },
 };
 </script>
 
