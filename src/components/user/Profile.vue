@@ -24,24 +24,18 @@
         >{{ joinedDate }}
       </div>
     </div>
+    <EditProfile />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { computed } from "vue";
+import { useStore } from "vuex";
 
-import { db } from "../../firebase";
+export { default as EditProfile } from "./EditProfile";
 
-const route = useRoute();
-export const user = ref(null);
-
-onMounted(async () => {
-  if (route.params.userId) {
-    const userDoc = await db.collection("users").doc(route.params.userId).get();
-    user.value = userDoc.data();
-  }
-});
+const store = useStore();
+export const user = computed(() => store.getters.user);
 
 export const fullname = computed(() => {
   if (user.value) {

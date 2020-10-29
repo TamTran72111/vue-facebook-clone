@@ -1,5 +1,6 @@
 <template>
   <div class="field">
+    <label v-if="label" class="label">{{ label }}</label>
     <div class="control has-icons-right" :class="{ 'has-icons-left': !!icon }">
       <input
         class="input"
@@ -26,7 +27,7 @@
 import { ref } from "vue";
 
 export default {
-  props: ["type", "icon", "placeholder", "modelValue", "validate"],
+  props: ["type", "icon", "placeholder", "modelValue", "validate", "label"],
   emits: ["update:modelValue"],
   setup(props, context) {
     const invalid = ref(false);
