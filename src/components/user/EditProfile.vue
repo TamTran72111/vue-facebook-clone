@@ -26,5 +26,6 @@ export default {
 <style scoped>
 .icon.has-text-info {
   cursor: pointer;
+  font-size: 1.3rem;
 }
 </style>

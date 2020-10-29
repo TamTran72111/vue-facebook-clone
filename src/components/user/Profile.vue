@@ -8,7 +8,10 @@
         <img class="is-rounded" :src="user.avatar" alt="User avatar" />
       </figure>
     </div>
-    <h3 class="title is-3 mt-2 mb-0">{{ user.displayName }}</h3>
+    <h3 class="title is-3 mt-2 mb-0">
+      {{ user.displayName }}
+      <EditProfile v-if="isOwner" />
+    </h3>
     <div v-if="fullname !== user.displayName">({{ fullname }})</div>
 
     <div class="info mt-3 pt-2 pb-1 is-5">
@@ -24,7 +27,6 @@
         >{{ joinedDate }}
       </div>
     </div>
-    <EditProfile />
   </div>
 </template>
 
@@ -50,6 +52,10 @@ export const joinedDate = computed(() => {
     return `Joined ${date.toLocaleDateString()}`;
   }
   return "";
+});
+
+export const isOwner = computed(() => {
+  return store.getters.user.userId === store.getters.userId;
 });
 </script>
 
