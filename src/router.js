@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import Home from "./components/Home.vue";
 import Auth from "./pages/Auth.vue";
+import User from "./pages/User.vue";
 import store from "./store";
 
 const routes = [
@@ -18,6 +19,7 @@ const routes = [
       }
     },
   },
+  { path: "/users/:userId", name: "user", component: User, props: true },
 ];
 
 const router = createRouter({
