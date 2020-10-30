@@ -4,8 +4,10 @@ export default {
   },
   clearPosts(state) {
     state.posts = [];
-    state._postSnapshotSubscriber();
-    state._postSnapshotSubscriber = null;
+    if (state._postSnapshotSubscriber) {
+      state._postSnapshotSubscriber();
+      state._postSnapshotSubscriber = null;
+    }
   },
   addPostListener(state, subscriber) {
     state._postSnapshotSubscriber = subscriber;

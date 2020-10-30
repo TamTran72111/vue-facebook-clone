@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
@@ -18,6 +18,13 @@ export default {
   setup() {
     const store = useStore();
     const route = useRoute();
+
+    watch(route, async () => {
+      store.dispatch("clearUser");
+      if (route.params.userId) {
+        await store.dispatch("fetchUser", route.params.userId);
+      }
+    });
 
     onMounted(async () => {
       if (route.params.userId) {
