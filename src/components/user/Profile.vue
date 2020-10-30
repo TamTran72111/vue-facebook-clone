@@ -3,11 +3,16 @@
     v-if="user"
     class="profile box py-5 has-background-white has-text-centered"
   >
-    <div class="image-wrapper mt-1">
+    <div
+      class="image-wrapper mt-1"
+      @click="toggleUploadAvatar"
+      :style="avatarStyle"
+    >
       <figure class="image">
         <img class="is-rounded" :src="user.avatar" alt="User avatar" />
       </figure>
     </div>
+    <UploadAvatar :show="showUploadAvatar" :close="toggleUploadAvatar" />
     <h3 class="title is-3 mt-2 mb-0">
       {{ user.displayName }}
       <EditProfile v-if="isOwner" />
@@ -31,10 +36,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
 export { default as EditProfile } from "./EditProfile";
+export { default as UploadAvatar } from "./UploadAvatar";
 
 const store = useStore();
 export const user = computed(() => store.getters.user);
@@ -57,6 +63,13 @@ export const joinedDate = computed(() => {
 export const isOwner = computed(() => {
   return store.getters.user.userId === store.getters.userId;
 });
+export const avatarStyle = computed(() =>
+  isOwner.value ? { cursor: "pointer" } : null
+);
+export const showUploadAvatar = ref(false);
+export const toggleUploadAvatar = () => {
+  if (isOwner.value) showUploadAvatar.value = !showUploadAvatar.value;
+};
 </script>
 
 <style scoped>
@@ -68,9 +81,18 @@ export const isOwner = computed(() => {
 .image-wrapper {
   border: 4px solid #000;
   padding: 0;
-  width: 30%;
-  max-width: 250px;
+  display: inline-block;
   border-radius: 50%;
   margin: auto;
+  object-fit: cover;
+}
+.image {
+  width: 250px;
+  height: 250px;
+}
+.image img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
 }
 </style>
