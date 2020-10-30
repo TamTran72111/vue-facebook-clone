@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { computed, onMounted, onUnmounted } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 
 import Post from "./Post";
@@ -17,10 +17,6 @@ export default {
     const store = useStore();
     const posts = computed(() => store.getters.posts);
 
-    onMounted(() => store.dispatch("fetchPosts"));
-
-    // Clear all posts when unmounted
-    onUnmounted(() => store.dispatch("clearPosts"));
     return { posts };
   },
 };
