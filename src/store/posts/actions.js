@@ -3,25 +3,29 @@ import { db, firestore } from "../../firebase";
 const Posts = db.collection("posts");
 
 export default {
-  async fetchPosts({ commit, dispatch }) {
-    const unsubscribe = await Posts.orderBy("created_at", "desc").onSnapshot(
-      (snapshot) => {
-        // Update posts on snapshot change
-        const posts = snapshot.docs.map((post) => ({
-          id: post.id,
-          ...post.data(),
-        }));
-        commit("fetchPosts", posts);
+  async fetchPosts({ commit, dispatch }, PostQuery = Posts) {
+    const unsubscribe = await PostQuery.orderBy(
+      "created_at",
+      "desc"
+    ).onSnapshot((snapshot) => {
+      // Update posts on snapshot change
+      const posts = snapshot.docs.map((post) => ({
+        id: post.id,
+        ...post.data(),
+      }));
+      commit("fetchPosts", posts);
 
-        // Update comments for changed posts (added and modified only)
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === "modified" || change.type === "added") {
-            dispatch("fetchPostComments", change.doc.id);
-          }
-        });
-      }
-    );
+      // Update comments for changed posts (added and modified only)
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "modified" || change.type === "added") {
+          dispatch("fetchPostComments", change.doc.id);
+        }
+      });
+    });
     commit("addPostListener", unsubscribe);
+  },
+  async fetchUserPosts({ dispatch }, userId) {
+    dispatch("fetchPosts", Posts.where("userId", "==", userId));
   },
   createPost({ rootGetters }, post) {
     Posts.add({

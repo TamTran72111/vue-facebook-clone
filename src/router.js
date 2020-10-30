@@ -19,7 +19,7 @@ const routes = [
       }
     },
   },
-  { path: "/users/:userId", name: "user", component: User, props: true },
+  { path: "/users/:userId", name: "user", component: User },
 ];
 
 const router = createRouter({
