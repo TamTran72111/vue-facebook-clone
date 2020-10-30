@@ -69,4 +69,12 @@ export default {
     commentedPost.comments += commentChange;
     await Posts.doc(postId).update({ comments: commentedPost.comments });
   },
+  async updatePostUserData({ rootGetters }, newUserData) {
+    const posts = rootGetters.posts;
+    const batch = db.batch();
+    posts.forEach((post) => {
+      batch.update(Posts.doc(post.id), newUserData);
+    });
+    await batch.commit();
+  },
 };

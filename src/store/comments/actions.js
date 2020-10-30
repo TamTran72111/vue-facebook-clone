@@ -49,4 +49,13 @@ export default {
     // Deleted comments still exist in the store's state, but it
     // does not cause any problem, so just leave it there.
   },
+  async updateCommentUserData(_, { userId, ...newUserData }) {
+    const comments = await Comments.where("userId", "==", userId).get();
+    const batch = db.batch();
+    comments.docs.forEach((comment) => {
+      comment.ref;
+      batch.update(comment.ref, { ...newUserData });
+    });
+    await batch.commit();
+  },
 };

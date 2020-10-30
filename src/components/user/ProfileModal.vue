@@ -94,6 +94,7 @@ export default {
     });
 
     const editProfile = async () => {
+      const oldDisplayName = user.value.displayName;
       if (
         firstname.value !== user.value.firstname ||
         surname.value !== user.value.surname ||
@@ -110,6 +111,15 @@ export default {
             bio: bio.value,
             location: location.value,
           },
+        });
+      }
+      if (oldDisplayName !== displayName.value) {
+        await store.dispatch("updateCommentUserData", {
+          userId: user.value.userId,
+          displayName: displayName.value,
+        });
+        await store.dispatch("updatePostUserData", {
+          displayName: displayName.value,
         });
       }
       props.close();
