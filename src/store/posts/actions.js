@@ -41,13 +41,11 @@ export default {
   clearPosts({ commit }) {
     commit("clearPosts");
   },
-  async editPost({ commit }, { postId, post }) {
+  async editPost(_, { postId, post }) {
     await Posts.doc(postId).update({ post });
-    commit("editPost", { postId, post });
   },
-  async deletePost({ commit, dispatch }, postId) {
+  async deletePost({ dispatch }, postId) {
     await Posts.doc(postId).delete();
-    commit("deletePost", postId);
 
     await dispatch("deletePostLikes", postId);
     await dispatch("deletePostComments", postId);

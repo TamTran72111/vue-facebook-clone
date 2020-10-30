@@ -35,9 +35,7 @@ export default {
     });
     commit("editComment", { postId, commentId, comment });
   },
-  async deleteComment({ commit, dispatch }, { commentId, postId }) {
-    commit("deleteComment", { commentId, postId });
-
+  async deleteComment({ dispatch }, { commentId, postId }) {
     await Comments.doc(commentId).delete();
 
     // Decrease the comment count of the corresponding post
