@@ -12,54 +12,61 @@
           </div>
 
           <hr class="mb-3" />
+          <form @submit.prevent="editProfile">
+            <div class="doubleField">
+              <RequiredInput
+                type="text"
+                label="First Name"
+                placeholder="First Name"
+                v-model.trim="firstname"
+              />
+              <RequiredInput
+                type="text"
+                label="Surname"
+                placeholder="Surname"
+                v-model.trim="surname"
+              />
+            </div>
 
-          <div class="doubleField">
-            <RequiredInput
-              type="text"
-              label="First Name"
-              placeholder="First Name"
-              v-model.trim="firstname"
-            />
-            <RequiredInput
-              type="text"
-              label="Surname"
-              placeholder="Surname"
-              v-model.trim="surname"
-            />
-          </div>
-
-          <div class="doubleField">
-            <RequiredInput
-              type="text"
-              label="Display name"
-              placeholder="Display Name"
-              v-model.trim="displayName"
-            />
+            <div class="doubleField">
+              <RequiredInput
+                type="text"
+                label="Display name"
+                placeholder="Display Name"
+                v-model.trim="displayName"
+              />
+              <UnrequiredInput
+                type="text"
+                label="Location"
+                placeholder="Location"
+                v-model.trim="location"
+                icon="fa-map-marker-alt has-text-info"
+              />
+            </div>
             <UnrequiredInput
               type="text"
-              label="Location"
-              placeholder="Location"
-              v-model.trim="location"
-              icon="fa-map-marker-alt has-text-info"
+              label="Bio"
+              placeholder="Bio"
+              v-model.trim="bio"
             />
-          </div>
-          <UnrequiredInput
-            type="text"
-            label="Bio"
-            placeholder="Bio"
-            v-model.trim="bio"
-          />
 
-          <div class="field is-grouped is-justify-content-center">
-            <div class="control">
-              <button @click="editProfile" class="button is-link">Save</button>
+            <div class="field is-grouped is-justify-content-center">
+              <div class="control">
+                <button
+                  type="submit"
+                  :disabled="isInvalid"
+                  class="button is-link"
+                >
+                  Save
+                </button>
+              </div>
+              <div class="control">
+                <button @click.stop="close" class="button is-link is-light">
+                  Cancel
+                </button>
+              </div>
             </div>
-            <div class="control">
-              <button @click="close" class="button is-link is-light">
-                Cancel
-              </button>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -125,7 +132,23 @@ export default {
       props.close();
     };
 
-    return { firstname, surname, displayName, bio, location, editProfile };
+    const isInvalid = computed(() => {
+      return (
+        displayName.value === "" ||
+        firstname.value === "" ||
+        surname.value === ""
+      );
+    });
+
+    return {
+      firstname,
+      surname,
+      displayName,
+      bio,
+      location,
+      editProfile,
+      isInvalid,
+    };
   },
 };
 </script>
