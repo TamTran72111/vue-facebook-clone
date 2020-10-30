@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted, watch } from "vue";
+import { computed, onMounted, onUnmounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
@@ -19,11 +19,10 @@ export default {
     const store = useStore();
     const route = useRoute();
 
-    watch(route, async () => {
+    const userId = computed(() => route.params.userId);
+    watch(userId, async () => {
       store.dispatch("clearUser");
-      if (route.params.userId) {
-        await store.dispatch("fetchUser", route.params.userId);
-      }
+      if (userId.value) await store.dispatch("fetchUser", userId.value);
     });
 
     onMounted(async () => {
