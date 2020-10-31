@@ -14,34 +14,11 @@
         </router-link>
 
         <!-- Edit and Delete  -->
-        <div
-          v-if="isAuthor"
-          class="dropdown"
-          :class="{ 'is-active': showDropdown }"
-          @click="toggleDropdown"
-        >
-          <div class="dropdown-trigger">
-            <span class="icon">
-              <i class="fas fa-ellipsis-v"></i>
-            </span>
-          </div>
-          <div class="dropdown-menu">
-            <div class="dropdown-content">
-              <div class="dropdown-item" @click="toggleEdit">
-                <span>Edit</span>
-                <span class="icon has-text-info"
-                  ><i class="fas fa-pencil-alt"></i
-                ></span>
-              </div>
-              <div class="dropdown-item" @click="toggleDelete">
-                <span>Delete</span>
-                <span class="icon has-text-danger"
-                  ><i class="fas fa-trash-alt"></i
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <EditAndDeleteIcons
+          :isAuthor="isAuthor"
+          :toggleEdit="toggleEdit"
+          :toggleDelete="toggleDelete"
+        />
       </div>
       <form v-if="showEdit" @submit.prevent="editComment">
         <input
@@ -75,20 +52,16 @@ import { useStore } from "vuex";
 
 import ConfirmationModal from "../ui/ConfirmationModal";
 import UserAvatar from "../ui/UserAvatar";
+import EditAndDeleteIcons from "../ui/EditAndDeleteIcons";
 
 export default {
   props: ["comment"],
-  components: { UserAvatar, ConfirmationModal },
+  components: { UserAvatar, ConfirmationModal, EditAndDeleteIcons },
   setup(props) {
     const store = useStore();
     const isAuthor = computed(
       () => store.getters.userId === props.comment.userId
     );
-
-    const showDropdown = ref(false);
-    const toggleDropdown = () => {
-      showDropdown.value = !showDropdown.value;
-    };
 
     const editedComment = ref("");
     const showEdit = ref(false);
@@ -130,8 +103,6 @@ export default {
 
     return {
       isAuthor,
-      showDropdown,
-      toggleDropdown,
       editedComment,
       showEdit,
       toggleEdit,
@@ -170,27 +141,5 @@ a {
 .comment__content > div {
   display: flex;
   justify-content: space-between;
-}
-.dropdown {
-  cursor: pointer;
-}
-.dropdown-menu {
-  transform: translateX(-90%);
-}
-
-/* .dropdown-content */
-.dropdown-menu {
-  min-width: 6.5rem;
-}
-.dropdown-item {
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-}
-
-.dropdown-item:hover {
-  background: #e0e0e0;
 }
 </style>

@@ -11,34 +11,11 @@
         </div>
 
         <!-- Post Edit and Delete buttons -->
-        <div
-          v-if="isAuthor"
-          class="dropdown"
-          :class="{ 'is-active': showDropdown }"
-          @click="toggleDropdown"
-        >
-          <div class="dropdown-trigger">
-            <span class="icon mt-2">
-              <i class="fas fa-ellipsis-v"></i>
-            </span>
-          </div>
-          <div class="dropdown-menu">
-            <div class="dropdown-content">
-              <div class="dropdown-item" @click="toggleEditPost">
-                <span>Edit</span>
-                <span class="icon has-text-info"
-                  ><i class="fas fa-pencil-alt"></i
-                ></span>
-              </div>
-              <div class="dropdown-item" @click="toggleDelete">
-                <span>Delete</span>
-                <span class="icon has-text-danger"
-                  ><i class="fas fa-trash-alt"></i
-                ></span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <EditAndDeleteIcons
+          :isAuthor="isAuthor"
+          :toggleEdit="toggleEditPost"
+          :toggleDelete="toggleDelete"
+        />
 
         <!--  -->
       </div>
@@ -104,6 +81,7 @@ import CreateComment from "../comments/CreateComment";
 import CommentList from "../comments/CommentList";
 import UserAvatar from "../ui/UserAvatar";
 import ConfirmationModal from "../ui/ConfirmationModal";
+import EditAndDeleteIcons from "../ui/EditAndDeleteIcons";
 
 export default {
   props: ["post"],
@@ -113,6 +91,7 @@ export default {
     ConfirmationModal,
     CreateComment,
     CommentList,
+    EditAndDeleteIcons,
   },
   setup(props) {
     const date = computed(() => {
@@ -152,11 +131,6 @@ export default {
     };
 
     const isAuthor = computed(() => props.post.userId === store.getters.userId);
-
-    const showDropdown = ref(false);
-    const toggleDropdown = () => {
-      showDropdown.value = !showDropdown.value;
-    };
 
     const placeholder = computed(() => {
       return `What's on your mind, ${store.getters.displayName}?`;
@@ -207,8 +181,6 @@ export default {
       liked,
       toggleLiked,
       isAuthor,
-      showDropdown,
-      toggleDropdown,
       placeholder,
       oldPost,
       showEditPost,
