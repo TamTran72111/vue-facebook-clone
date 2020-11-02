@@ -50,24 +50,15 @@ export default {
     await dispatch("deletePostLikes", postId);
     await dispatch("deletePostComments", postId);
   },
-  async updatePostLike({ getters }, { postId, likeChange }) {
-    const likedPostIndex = getters.posts.findIndex(
-      (post) => post.id === postId
-    );
-
-    const likedPost = getters.posts[likedPostIndex];
-
-    likedPost.likes += likeChange;
-    await Posts.doc(postId).update({ likes: likedPost.likes });
+  async updatePostLike(_, { postId, likeChange }) {
+    await Posts.doc(postId).update({
+      likes: firestore.FieldValue.increment(likeChange),
+    });
   },
-  async updatePostComment({ getters }, { postId, commentChange }) {
-    const commentedPostIndex = getters.posts.findIndex(
-      (post) => post.id === postId
-    );
-
-    const commentedPost = getters.posts[commentedPostIndex];
-    commentedPost.comments += commentChange;
-    await Posts.doc(postId).update({ comments: commentedPost.comments });
+  async updatePostComment(_, { postId, commentChange }) {
+    await Posts.doc(postId).update({
+      comments: firestore.FieldValue.increment(commentChange),
+    });
   },
   async updatePostUserData({ rootGetters }, newUserData) {
     const posts = rootGetters.posts;
