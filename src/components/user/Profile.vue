@@ -32,6 +32,24 @@
         >{{ joinedDate }}
       </div>
     </div>
+    <div class="follow" v-if="!isOwner">
+      <button
+        class="button is-primary"
+        :disabled="followRequesting"
+        @click="follow"
+        v-if="!followed"
+      >
+        Follow
+      </button>
+      <button
+        class="button is-primary is-outlined"
+        :disabled="followRequesting"
+        @click="unfollow"
+        v-else
+      >
+        Unfollow
+      </button>
+    </div>
   </div>
 </template>
 
@@ -70,6 +88,26 @@ export const showUploadAvatar = ref(false);
 export const toggleUploadAvatar = () => {
   if (isOwner.value) showUploadAvatar.value = !showUploadAvatar.value;
 };
+
+export const followRequesting = ref(false);
+
+export const follow = async () => {
+  followRequesting.value = true;
+  await store.dispatch("follow");
+  followRequesting.value = false;
+};
+
+export const unfollow = async () => {
+  followRequesting.value = true;
+  await store.dispatch("unfollow");
+  followRequesting.value = false;
+};
+
+export const followed = computed(() => {
+  console.log(store.state.follows);
+  console.log(store.getters.followed(user.value.userId) !== undefined);
+  return store.getters.followed(user.value.userId) !== undefined;
+});
 </script>
 
 <style scoped>

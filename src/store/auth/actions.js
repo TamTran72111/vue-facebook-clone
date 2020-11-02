@@ -59,6 +59,7 @@ export default {
       ...newUser.data(),
     });
     dispatch("fetchLikes");
+    dispatch("fetchFollows");
   },
   logout({ commit }) {
     auth.signOut();
