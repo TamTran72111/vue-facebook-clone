@@ -60,6 +60,7 @@ export default {
     });
     dispatch("fetchLikes");
     dispatch("fetchFollows");
+    dispatch("fetchNotifications");
   },
   logout({ commit }) {
     auth.signOut();

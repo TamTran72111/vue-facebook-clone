@@ -47,6 +47,10 @@
 
       <div class="navbar-end">
         <div class="navbar-item">
+          <Notifications />
+        </div>
+
+        <div class="navbar-item">
           <div class="buttons" @click="logout">
             <a class="button is-primary">
               <strong>Logout</strong>
@@ -62,7 +66,10 @@
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
+import Notifications from "./Notifications";
+
 export default {
+  components: { Notifications },
   setup() {
     const store = useStore();
     const router = useRouter();

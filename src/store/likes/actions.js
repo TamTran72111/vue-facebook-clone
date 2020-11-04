@@ -32,7 +32,7 @@ export default {
       postId,
       likeChange: 1,
     });
-
+    await dispatch("createLikeNotification", postId);
     commit("like", {
       id: like.id,
       ...new_like,

@@ -6,6 +6,7 @@ import likes from "./likes";
 import comments from "./comments";
 import user from "./user";
 import follows from "./follows";
+import notifcations from "./notifications";
 
 export default createStore({
   modules: {
@@ -15,5 +16,6 @@ export default createStore({
     comments,
     user,
     follows,
+    notifcations,
   },
 });
