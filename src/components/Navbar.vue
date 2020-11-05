@@ -66,7 +66,7 @@
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
-import Notifications from "./Notifications";
+import Notifications from "./notifications/Notifications";
 
 export default {
   components: { Notifications },
