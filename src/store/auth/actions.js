@@ -62,8 +62,9 @@ export default {
     dispatch("fetchFollows");
     dispatch("fetchNotifications");
   },
-  logout({ commit }) {
+  logout({ commit, dispatch }) {
     auth.signOut();
+    dispatch("clearNotifications");
     commit("logout");
   },
 };

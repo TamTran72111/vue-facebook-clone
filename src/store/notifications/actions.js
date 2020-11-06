@@ -8,22 +8,26 @@ export const notificationType = {
 };
 
 export default {
-  async fetchNotifications({ commit, rootGetters }) {
-    const notifications = await Notifications.where(
+  fetchNotifications({ commit, rootGetters }) {
+    const unsubscribe = Notifications.where(
       "receiver",
       "==",
       rootGetters.userId
     )
       .orderBy("created_at", "desc")
-      .get();
-
-    commit(
-      "fetchNotifications",
-      notifications.docs.map((notification) => ({
-        id: notification.id,
-        ...notification.data(),
-      }))
-    );
+      .onSnapshot((snapshot) => {
+        commit(
+          "fetchNotifications",
+          snapshot.docs.map((notification) => ({
+            id: notification.id,
+            ...notification.data(),
+          }))
+        );
+      });
+    commit("addNotificationListener", unsubscribe);
+  },
+  clearNotifications({ commit }) {
+    commit("clearNotificationListener");
   },
   async createNotification({ rootGetters }, { postId, type }) {
     const postIndex = rootGetters.posts.findIndex((post) => postId === post.id);
