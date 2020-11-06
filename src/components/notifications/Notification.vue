@@ -18,11 +18,11 @@ export default {
     const user = computed(() => props.notification.sender);
     const message = computed(() => {
       if (notificationType.CREATE_NEW_POST === props.notification.type) {
-        return "create a new post";
+        return "created a new post";
       } else if (notificationType.LIKE_POST === props.notification.type) {
-        return "like your post";
+        return "liked your post";
       } else {
-        return "comment on your post";
+        return "commented on your post";
       }
     });
 
