@@ -28,6 +28,7 @@ export default {
 
     // Increase the comment count of the corresponding post
     dispatch("updatePostComment", { postId, commentChange: 1 });
+    dispatch("createCommentNotification", postId);
   },
   async editComment({ commit }, { postId, commentId, comment }) {
     await Comments.doc(commentId).update({

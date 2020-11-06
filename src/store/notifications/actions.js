@@ -25,19 +25,31 @@ export default {
       }))
     );
   },
-  async createLikeNotification({ rootGetters }, postId) {
+  async createNotification({ rootGetters }, { postId, type }) {
     const postIndex = rootGetters.posts.findIndex((post) => postId === post.id);
     const post = rootGetters.posts[postIndex];
     const newNotification = {
       postId,
       sender: rootGetters.displayName,
       receiver: post.userId,
-      type: notificationType.LIKE_POST,
+      type,
       created_at: firestore.FieldValue.serverTimestamp(),
     };
     await Notifications.add(newNotification);
   },
+  async createLikeNotification({ dispatch }, postId) {
+    await dispatch("createNotification", {
+      postId,
+      type: notificationType.LIKE_POST,
+    });
+  },
   removeNotification(_, notificationId) {
     Notifications.doc(notificationId).delete();
+  },
+  async createCommentNotification({ dispatch }, postId) {
+    await dispatch("createNotification", {
+      postId,
+      type: notificationType.COMMENT_ON_POST,
+    });
   },
 };
