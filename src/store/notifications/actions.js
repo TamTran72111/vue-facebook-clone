@@ -52,4 +52,22 @@ export default {
       type: notificationType.COMMENT_ON_POST,
     });
   },
+  async createPostNotification({ rootGetters }, postId) {
+    const follows = await db
+      .collection("follows")
+      .where("following", "==", rootGetters.userId)
+      .get();
+    const batch = db.batch();
+    follows.docs.forEach((follow) => {
+      const docRef = Notifications.doc();
+      batch.set(docRef, {
+        postId,
+        sender: rootGetters.displayName,
+        receiver: follow.data().follower,
+        type: notificationType.CREATE_NEW_POST,
+        created_at: firestore.FieldValue.serverTimestamp(),
+      });
+    });
+    batch.commit();
+  },
 };

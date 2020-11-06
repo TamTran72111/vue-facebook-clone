@@ -27,8 +27,8 @@ export default {
   async fetchUserPosts({ dispatch }, userId) {
     dispatch("fetchPosts", Posts.where("userId", "==", userId));
   },
-  createPost({ rootGetters }, post) {
-    Posts.add({
+  async createPost({ dispatch, rootGetters }, post) {
+    const postDoc = await Posts.add({
       userId: rootGetters.userId,
       displayName: rootGetters.displayName,
       post,
@@ -37,6 +37,7 @@ export default {
       likes: 0,
       comments: 0,
     });
+    await dispatch("createPostNotification", postDoc.id);
   },
   clearPosts({ commit }) {
     commit("clearPosts");
