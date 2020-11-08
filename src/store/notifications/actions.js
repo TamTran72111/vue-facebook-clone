@@ -32,6 +32,12 @@ export default {
   async createNotification({ rootGetters }, { postId, type }) {
     const postIndex = rootGetters.posts.findIndex((post) => postId === post.id);
     const post = rootGetters.posts[postIndex];
+
+    if (rootGetters.userId === post.userId) {
+      // Avoid self-notification
+      return;
+    }
+
     const newNotification = {
       postId,
       sender: rootGetters.displayName,
