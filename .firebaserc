@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "vue-projects-89c61"
+  },
+  "targets": {
+    "vue-projects-89c61": {
+      "hosting": {
+        "vue-fb": [
+          "vue-fb-clone"
+        ]
+      }
+    }
+  }
+}
