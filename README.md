@@ -2,6 +2,8 @@
 
 This project is a pratice of Vue 3 composition API and Firebase.
 
+The project is deployed at [https://vue-fb-clone.web.app/](https://vue-fb-clone.web.app/)
+
 ## Project setup
 
 ```
