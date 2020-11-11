@@ -53,61 +53,78 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
-export { default as EditProfile } from "./EditProfile";
-export { default as UploadAvatar } from "./UploadAvatar";
+import EditProfile from "./EditProfile";
+import UploadAvatar from "./UploadAvatar";
 
-const store = useStore();
-export const user = computed(() => store.getters.user);
+export default {
+  components: { EditProfile, UploadAvatar },
+  setup() {
+    const store = useStore();
+    const user = computed(() => store.getters.user);
 
-export const fullname = computed(() => {
-  if (user.value) {
-    return `${user.value.firstname} ${user.value.surname}`;
-  }
-  return "";
-});
+    const fullname = computed(() => {
+      if (user.value) {
+        return `${user.value.firstname} ${user.value.surname}`;
+      }
+      return "";
+    });
 
-export const joinedDate = computed(() => {
-  if (user.value) {
-    const date = new Date(user.value.created_at.seconds * 1000);
-    return `Joined ${date.toLocaleDateString()}`;
-  }
-  return "";
-});
+    const joinedDate = computed(() => {
+      if (user.value) {
+        const date = new Date(user.value.created_at.seconds * 1000);
+        return `Joined ${date.toLocaleDateString()}`;
+      }
+      return "";
+    });
 
-export const isOwner = computed(() => {
-  return store.getters.user.userId === store.getters.userId;
-});
-export const avatarStyle = computed(() =>
-  isOwner.value ? { cursor: "pointer" } : null
-);
-export const showUploadAvatar = ref(false);
-export const toggleUploadAvatar = () => {
-  if (isOwner.value) showUploadAvatar.value = !showUploadAvatar.value;
+    const isOwner = computed(() => {
+      return store.getters.user.userId === store.getters.userId;
+    });
+    const avatarStyle = computed(() =>
+      isOwner.value ? { cursor: "pointer" } : null
+    );
+    const showUploadAvatar = ref(false);
+    const toggleUploadAvatar = () => {
+      if (isOwner.value) showUploadAvatar.value = !showUploadAvatar.value;
+    };
+
+    const followRequesting = ref(false);
+
+    const follow = async () => {
+      followRequesting.value = true;
+      await store.dispatch("follow");
+      followRequesting.value = false;
+    };
+
+    const unfollow = async () => {
+      followRequesting.value = true;
+      await store.dispatch("unfollow");
+      followRequesting.value = false;
+    };
+
+    const followed = computed(() => {
+      return store.getters.followed(user.value.userId) !== undefined;
+    });
+
+    return {
+      user,
+      fullname,
+      joinedDate,
+      isOwner,
+      avatarStyle,
+      showUploadAvatar,
+      toggleUploadAvatar,
+      followRequesting,
+      follow,
+      unfollow,
+      followed,
+    };
+  },
 };
-
-export const followRequesting = ref(false);
-
-export const follow = async () => {
-  followRequesting.value = true;
-  await store.dispatch("follow");
-  followRequesting.value = false;
-};
-
-export const unfollow = async () => {
-  followRequesting.value = true;
-  await store.dispatch("unfollow");
-  followRequesting.value = false;
-};
-
-export const followed = computed(() => {
-  console.log(store.state.follows);
-  console.log(store.getters.followed(user.value.userId) !== undefined);
-  return store.getters.followed(user.value.userId) !== undefined;
-});
 </script>
 
 <style scoped>

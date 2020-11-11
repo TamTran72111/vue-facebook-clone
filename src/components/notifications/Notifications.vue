@@ -22,20 +22,31 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 
-export { default as Notification } from "./Notification";
+import Notification from "./Notification";
 
-const store = useStore();
+export default {
+  components: { Notification },
+  setup() {
+    const store = useStore();
 
-export const notifications = computed(() => store.getters.notifications);
-export const hasNotifications = computed(() => store.getters.hasNotifications);
+    const notifications = computed(() => store.getters.notifications);
+    const hasNotifications = computed(() => store.getters.hasNotifications);
 
-export const show = ref(false);
-export const toggleShow = () => {
-  show.value = !show.value;
+    const show = ref(false);
+    const toggleShow = () => {
+      show.value = !show.value;
+    };
+    return {
+      notifications,
+      hasNotifications,
+      show,
+      toggleShow,
+    };
+  },
 };
 </script>
 
