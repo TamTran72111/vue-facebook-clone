@@ -19,7 +19,7 @@ export default {
   components: { Navbar },
   setup() {
     const store = useStore();
-    store.dispatch("tryLogin");
+    store.dispatch("setupAuthListener");
 
     const isLoggedIn = computed(() => store.getters.isLoggedIn);
 

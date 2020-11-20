@@ -4,20 +4,20 @@ const defaultUserAvatar =
   "https://firebasestorage.googleapis.com/v0/b/vue-projects-89c61.appspot.com/o/avatars%2Fdefault-user-avater.png?alt=media&token=55e5edb1-e550-4161-8ee0-3e72d2d2a20f";
 
 export default {
-  tryLogin({ dispatch }) {
-    setTimeout(() => {
-      // Try to login when users manually navigate using URL
-      if (auth.currentUser) {
-        dispatch("loginWithUserId", auth.currentUser.uid);
+  setupAuthListener({ dispatch, commit }) {
+    const listener = auth.onAuthStateChanged((user) => {
+      if (user) {
+        // User is authenticated, so fetch the user's info
+        dispatch("loginWithUserId", user.uid);
       }
-    }, 400);
+    });
+    commit("setupAuthListener", listener);
   },
-  async login({ dispatch }, payload) {
-    const authUser = await auth.signInWithEmailAndPassword(
-      payload.email,
-      payload.password
-    );
-    await dispatch("loginWithUserId", authUser.user.uid);
+  cleanupAuthListener({ commit }) {
+    commit("cleanupAuthListener");
+  },
+  async login(_, payload) {
+    await auth.signInWithEmailAndPassword(payload.email, payload.password);
   },
   async signup({ commit }, payload) {
     const authUser = await auth.createUserWithEmailAndPassword(
